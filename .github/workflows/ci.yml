@@ -6,45 +6,17 @@ on:
   pull_request:
 
 jobs:
-  changes:
-    name: Detect changes
+  hello:
+    name: Hello
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    outputs:
-      lib: ${{ steps.filter.outputs.lib }}
-      app: ${{ steps.filter.outputs.app }}
-      shared: ${{ steps.filter.outputs.shared }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+      - run: |
+          echo hello world
+          exit 1
 
-      - name: Filter changed paths
-        uses: dorny/paths-filter@v4
-        id: filter
-        with:
-          # On push to main, compare against the commit before this push.
-          # Ignored for pull_request (compared against the PR base).
-          base: main
-          filters: |
-            lib:
-              - 'packages/lib/**'
-            app:
-              - 'packages/app/**'
-            shared:
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-              - 'pnpm-workspace.yaml'
-              - 'tsconfig.base.json'
-              - '.github/workflows/ci.yml'
-
-  lib:
-    name: Library
-    needs: changes
-    if: needs.changes.outputs.lib == 'true' || needs.changes.outputs.shared == 'true'
+  ci:
+    name: CI
+    needs: hello
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -63,40 +35,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Typecheck
-        run: pnpm --filter @gh-actions/lib typecheck
+        run: pnpm typecheck
 
       - name: Test
-        run: pnpm --filter @gh-actions/lib test
+        run: pnpm test
 
       - name: Build
-        run: pnpm --filter @gh-actions/lib build
-
-  app:
-    name: App
-    needs: changes
-    if: needs.changes.outputs.app == 'true' || needs.changes.outputs.lib == 'true' || needs.changes.outputs.shared == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
-
-      - name: Enable pnpm
-        run: corepack enable
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Typecheck
-        run: pnpm --filter @gh-actions/app typecheck
-
-      - name: Test
-        run: pnpm --filter @gh-actions/app test
-
-      - name: Build
-        run: pnpm --filter @gh-actions/app build
+        run: pnpm build
