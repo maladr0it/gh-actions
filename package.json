@@ -4,15 +4,6 @@
   "version": "0.1.0",
   "type": "module",
   "packageManager": "pnpm@12.3.4",
-  "scripts": {
-    "dev": "pnpm --filter @gh-actions/app-a dev",
-    "dev:b": "pnpm --filter @gh-actions/app-b dev",
-    "build": "pnpm -r build",
-    "test": "pnpm --filter @gh-actions/lib-a build && pnpm -r test",
-    "typecheck": "pnpm -r typecheck",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
-  },
   "engines": {
     "node": ">=26"
   },

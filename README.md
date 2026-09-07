@@ -9,20 +9,26 @@ packages/
   app-b/   Second Vite + React app that consumes the same library
 ```
 
-## Scripts
+## Commands
+
+Scripts live on the packages. From the repo root, target one with `--filter`:
 
 ```sh
 pnpm install
-pnpm test        # build lib-a, then vitest in every package
-pnpm typecheck
-pnpm build
-pnpm dev         # Vite for app-a
-pnpm dev:b       # Vite for app-b
+pnpm --filter @gh-actions/lib-a build
+pnpm --filter @gh-actions/lib-a test
+pnpm --filter @gh-actions/app-a test
+pnpm --filter @gh-actions/app-b test
+pnpm --filter @gh-actions/app-a dev
+pnpm --filter @gh-actions/app-b dev
+pnpm exec prettier --write .
 ```
+
+`pnpm -r <script>` still runs that script in every package that defines it.
 
 ## GitHub Actions
 
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push to `main` and on pull requests. Four jobs:
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push to `main` and on pull requests. Each job checks out the repo, then [`pnpm/setup`](https://github.com/pnpm/setup) installs pnpm (from `packageManager`), Node 26, and the workspace. Four jobs:
 
 1. **Build library** — compile `lib-a` and upload `dist`
 2. **Test library** — unit tests on source (does not wait on the build)
