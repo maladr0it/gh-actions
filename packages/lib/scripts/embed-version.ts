@@ -10,5 +10,8 @@ const pkg = JSON.parse(
 const out = join(dir, "..", "src", "version.generated.ts");
 writeFileSync(
   out,
-  `/** Generated from package.json by scripts/embed-version.ts — do not edit. */\nexport const version = ${JSON.stringify(pkg.version)};\n`,
+  `\
+/** Generated — do not edit. */
+export const version = ${JSON.stringify(pkg.version)};
+`,
 );
