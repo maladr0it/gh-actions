@@ -1,7 +1,8 @@
 node_modules
+.pnpm-store
 dist
 dist-ssr
-*.generated.ts
+*.generated*
 *.local
 .DS_Store
 coverage
