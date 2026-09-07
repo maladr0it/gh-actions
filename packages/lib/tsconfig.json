@@ -1,8 +1,7 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "types": ["vitest/globals"],
-    "noEmit": true
-  },
-  "include": ["src", "vitest.config.ts"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.build.json" },
+    { "path": "./tsconfig.test.json" }
+  ]
 }

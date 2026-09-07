@@ -8,9 +8,14 @@
     "dev": "pnpm --filter @gh-actions/app dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "engines": {
     "node": ">=22"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6"
   }
 }
