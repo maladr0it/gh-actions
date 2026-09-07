@@ -1,5 +1,5 @@
 {
-  "name": "@gh-actions/app",
+  "name": "@gh-actions/app-b",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -11,7 +11,7 @@
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
-    "@gh-actions/lib": "workspace:*",
+    "@gh-actions/lib-a": "workspace:*",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

@@ -6,39 +6,48 @@ on:
   pull_request:
 
 jobs:
-  hello:
-    name: Hello
+  build-lib:
+    name: Build library
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo hello world
-          exit 0
-
-  ci:
-    name: CI
-    needs: hello
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v7
-
-      - name: Enable pnpm
-        run: corepack enable
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - run: pnpm --filter @gh-actions/lib-a build
+      - uses: actions/upload-artifact@v7
         with:
-          node-version: 26
-          cache: pnpm
+          name: lib-a-dist
+          path: packages/lib-a/dist
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+  test-lib:
+    name: Test library
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - run: pnpm --filter @gh-actions/lib-a test
 
-      - name: Typecheck
-        run: pnpm typecheck
+  test-app-a:
+    name: Test app-a
+    needs: [build-lib]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v7
+        with:
+          name: lib-a-dist
+          path: packages/lib-a/dist
+      - run: pnpm --filter @gh-actions/app-a test
 
-      - name: Build
-        run: pnpm build
-
-      - name: Test
-        run: pnpm test
+  test-app-b:
+    name: Test app-b
+    needs: [build-lib]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v7
+        with:
+          name: lib-a-dist
+          path: packages/lib-a/dist
+      - run: pnpm --filter @gh-actions/app-b test
