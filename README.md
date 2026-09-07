@@ -21,6 +21,7 @@ pnpm --filter @gh-actions/lib-b build
 pnpm --filter @gh-actions/lib-a test
 pnpm --filter @gh-actions/lib-b test
 pnpm --filter @gh-actions/app-a test
+pnpm --filter @gh-actions/app-a test:visual
 pnpm --filter @gh-actions/app-b test
 pnpm --filter @gh-actions/app-a dev
 pnpm --filter @gh-actions/app-b dev
@@ -35,6 +36,7 @@ pnpm exec prettier --write .
 
 ```
 Build lib-a ──► Test app-a
+            ├─► Test app-a visual
             ├─► Test lib-b
             └─► Build lib-b ──► Test app-b
 Test lib-a      (no needs — parallel with Build lib-a)
@@ -45,7 +47,8 @@ Test lib-a      (no needs — parallel with Build lib-a)
 3. **Build lib-b** — wait on lib-a `dist`, compile `lib-b`, upload `dist`
 4. **Test lib-b** — wait on lib-a `dist`; tests import `@gh-actions/lib-a` through package exports
 5. **Test app-a** — wait only on **Build lib-a**, download that `dist`
-6. **Test app-b** — wait on **Build lib-b**, download both `dist` folders (`lib-b` imports `lib-a` at runtime)
+6. **Test app-a visual** — same `dist`, install Chromium, run browser tests. Compares screenshots on Linux only. Does not rewrite baselines.
+7. **Test app-b** — wait on **Build lib-b**, download both `dist` folders (`lib-b` imports `lib-a` at runtime)
 
 lib-a / lib-b tests and app tests are siblings where the graph allows. A failing `printVersion` test on lib-a does not skip the apps; a missing `dist` does.
 

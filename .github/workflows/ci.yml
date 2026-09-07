@@ -69,6 +69,20 @@ jobs:
           path: packages/lib-a/dist
       - run: pnpm --filter @gh-actions/app-a test
 
+  test-app-a-visual:
+    name: Test app-a visual
+    needs: [build-lib-a]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v7
+        with:
+          name: lib-a-dist
+          path: packages/lib-a/dist
+      - run: pnpm --filter @gh-actions/app-a exec playwright install --with-deps chromium
+      - run: pnpm --filter @gh-actions/app-a test:visual
+
   test-app-b:
     name: Test app-b
     needs: [build-lib-b]
