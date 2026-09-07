@@ -23,7 +23,7 @@ pnpm dev         # Vite dev server for the app
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push to `main` and on pull requests:
 
 1. Check out the repo
-2. Install pnpm and Node 24
+2. Install pnpm and Node 26
 3. `pnpm install --frozen-lockfile`
 4. Typecheck, test, and build
 
