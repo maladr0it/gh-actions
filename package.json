@@ -3,17 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "packageManager": "pnpm@11.25.0",
-  "scripts": {
-    "dev": "pnpm --filter @gh-actions/app dev",
-    "build": "pnpm -r build",
-    "test": "pnpm --filter @gh-actions/lib build && pnpm -r test",
-    "typecheck": "pnpm -r typecheck",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
-  },
+  "packageManager": "pnpm@12.3.4",
   "engines": {
-    "node": ">=22"
+    "node": ">=26"
   },
   "devDependencies": {
     "prettier": "^3.9.6"

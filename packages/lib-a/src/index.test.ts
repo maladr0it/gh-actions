@@ -17,7 +17,7 @@ test("version matches package.json", () => {
 
 test("printVersion logs and returns the version line", () => {
   const log = vi.spyOn(console, "log").mockImplementation(() => {});
-  expect(printVersion()).toBe(`gh-actions-lib v${version}`);
-  expect(log).toHaveBeenCalledWith(`gh-actions-lib v${version}`);
+  expect(printVersion()).toBe(`gh-actions-lib-a v${version}`);
+  expect(log).toHaveBeenCalledWith(`gh-actions-lib-a v${version}`);
   log.mockRestore();
 });

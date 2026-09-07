@@ -1,0 +1,12 @@
+name: Setup
+
+description: Install pnpm, Node, and workspace dependencies.
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/setup@v2
+      with:
+        runtime: node@26
+        cache: true
+        require-lockfile: true
