@@ -8,7 +8,6 @@
     "node": ">=26"
   },
   "devDependencies": {
-    "prettier": "^3.9.6",
-    "typescript": "catalog:"
+    "prettier": "^3.9.6"
   }
 }

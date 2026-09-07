@@ -1,5 +1,5 @@
 import { version as libAVersion } from "@gh-actions/lib-a";
-import { version } from "./version.generated.js";
+import { version } from "./version.generated";
 
 export { libAVersion, version };
 

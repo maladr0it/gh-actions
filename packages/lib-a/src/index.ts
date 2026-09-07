@@ -1,5 +1,5 @@
 import { kebabCase } from "lodash-es";
-import { version } from "./version.generated.js";
+import { version } from "./version.generated";
 
 export { version };
 

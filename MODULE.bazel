@@ -1,56 +1,8 @@
-"""Hermetic JS monorepo: Bazel 9 + Bzlmod + rules_js/ts.
-
-Third-party versions still come from pnpm-lock.yaml. Bazel fetches only the
-packages needed for the requested targets and links them like pnpm.
-"""
+"""Step 1: a Bazel module. No JS rules yet."""
 
 module(
     name = "gh_actions",
     version = "0.1.0",
 )
 
-bazel_dep(name = "aspect_rules_js", version = "3.4.1")
-bazel_dep(name = "aspect_rules_ts", version = "3.10.1")
-bazel_dep(name = "rules_nodejs", version = "6.7.5")
-bazel_dep(name = "bazel_skylib", version = "1.8.2")
-bazel_dep(name = "platforms", version = "1.1.0")
-
-# rules_nodejs 6.7.5 only vendors Node through 24.x. Pin 26.8.1 ourselves so
-# the hermetic toolchain matches engines.node / pnpm CI.
-node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
-node.toolchain(
-    node_version = "26.8.1",
-    node_repositories = {
-        "26.8.1-darwin_arm64": ("node-v26.8.1-darwin-arm64.tar.gz", "node-v26.8.1-darwin-arm64", "6e577fd0d9db776db82306629e441a9dace416702622aebdd171c9dfaa41f4d2"),
-        "26.8.1-darwin_amd64": ("node-v26.8.1-darwin-x64.tar.gz", "node-v26.8.1-darwin-x64", "fe9c6dbf9c8e1b4443803d75e2a20366e420dae650c747dbb116b22975751baf"),
-        "26.8.1-linux_arm64": ("node-v26.8.1-linux-arm64.tar.xz", "node-v26.8.1-linux-arm64", "23c1b4d19e2f12a7d06fe8aa3d6e0e4923cf77a47e13c5ccdf32fadaa33960f2"),
-        "26.8.1-linux_amd64": ("node-v26.8.1-linux-x64.tar.xz", "node-v26.8.1-linux-x64", "3e301118d7df53d563b7e96c1617545f26e2f76f9724be668d6cab65c15dda5d"),
-        "26.8.1-windows_arm64": ("node-v26.8.1-win-arm64.zip", "node-v26.8.1-win-arm64", "09d62005aa9dca8fcd9bdce8196f5aa783eee3818d5af74089eb7297103c02d4"),
-        "26.8.1-windows_amd64": ("node-v26.8.1-win-x64.zip", "node-v26.8.1-win-x64", "57693d8e93d1b04e7b7de46aca53ecd63e97564e73de36a68428d7ff08d83587"),
-    },
-)
-use_repo(node, "nodejs_toolchains")
-
-pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
-pnpm.pnpm(pnpm_version_from = "//:package.json")
-use_repo(pnpm, "pnpm")
-
-npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
-npm.npm_translate_lock(
-    name = "npm",
-    data = [
-        "//:package.json",
-        "//:pnpm-workspace.yaml",
-        "//packages/app-a:package.json",
-        "//packages/app-b:package.json",
-        "//packages/lib-a:package.json",
-        "//packages/lib-b:package.json",
-    ],
-    npmrc = "//:.npmrc",
-    pnpm_lock = "//:pnpm-lock.yaml",
-)
-use_repo(npm, "npm")
-
-typescript = use_extension("@aspect_rules_ts//ts:extensions.bzl", "typescript")
-typescript.deps(version = "7.0.2")
-use_repo(typescript, "npm_typescript")
+bazel_dep(name = "rules_shell", version = "0.8.0")

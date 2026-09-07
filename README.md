@@ -29,20 +29,15 @@ pnpm exec prettier --write .
 
 `pnpm -r <script>` still runs that script in every package that defines it.
 
-## Bazel
+## Bazel (step 1)
 
-The same package graph is a Bazel graph (Bazel 9, Bzlmod, [`rules_js`](https://github.com/aspect-build/rules_js) / [`rules_ts`](https://github.com/aspect-build/rules_ts)). Third-party versions still come from `pnpm-lock.yaml`; Bazel fetches only what the requested target needs and builds `lib-a` before anything that imports it. No `dist` artifacts between jobs.
+GitHub Actions still runs CI. There is a second workflow, [`.github/workflows/bazel.yml`](.github/workflows/bazel.yml), with **one** job that installs Bazel and runs `bazel test //:smoke`. That is a shell script, not the TypeScript workspace. pnpm jobs are unchanged.
 
-Needs [Bazelisk](https://github.com/bazelbuild/bazelisk) (`brew install bazelisk`). The version pin is `.bazelversion`.
+Needs [Bazelisk](https://github.com/bazelbuild/bazelisk) (`brew install bazelisk`). Version pin: `.bazelversion`.
 
 ```sh
-bazel test //...
-bazel build //packages/lib-a:pkg //packages/lib-b:pkg
+bazel test //:smoke
 ```
-
-`pnpm --filter … dev` / `build` is still the Vite app. Bazel owns the library compile + test graph (`lib-a` before `lib-b` before `app-b` tests) without passing `dist` artifacts between jobs. Vite 8's bundler does not resolve nested workspace `node_modules` inside the sandbox; those `:bundle` targets are `manual` until that is worth fighting.
-
-Bazel CI is [`.github/workflows/bazel.yml`](.github/workflows/bazel.yml). The hermetic Node toolchain is 26.8.1 (checksums in `MODULE.bazel`; `rules_nodejs` has not vendored 26 yet).
 
 ## GitHub Actions
 
