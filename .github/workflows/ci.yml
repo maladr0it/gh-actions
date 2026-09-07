@@ -82,6 +82,11 @@ jobs:
           path: packages/lib-a/dist
       - run: pnpm --filter @gh-actions/app-a exec playwright install --with-deps chromium
       - run: pnpm --filter @gh-actions/app-a test:visual
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: app-a-vrt-attachments
+          path: packages/app-a/.vitest/attachments
 
   test-app-b:
     name: Test app-b
