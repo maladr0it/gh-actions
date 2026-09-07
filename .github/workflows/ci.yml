@@ -6,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  build-lib:
-    name: Build library
+  build-lib-a:
+    name: Build lib-a
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -18,17 +18,47 @@ jobs:
           name: lib-a-dist
           path: packages/lib-a/dist
 
-  test-lib:
-    name: Test library
+  test-lib-a:
+    name: Test lib-a
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - run: pnpm --filter @gh-actions/lib-a test
 
+  build-lib-b:
+    name: Build lib-b
+    needs: [build-lib-a]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v7
+        with:
+          name: lib-a-dist
+          path: packages/lib-a/dist
+      - run: pnpm --filter @gh-actions/lib-b build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lib-b-dist
+          path: packages/lib-b/dist
+
+  test-lib-b:
+    name: Test lib-b
+    needs: [build-lib-a]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v7
+        with:
+          name: lib-a-dist
+          path: packages/lib-a/dist
+      - run: pnpm --filter @gh-actions/lib-b test
+
   test-app-a:
     name: Test app-a
-    needs: [build-lib]
+    needs: [build-lib-a]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -41,7 +71,7 @@ jobs:
 
   test-app-b:
     name: Test app-b
-    needs: [build-lib]
+    needs: [build-lib-b]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -50,4 +80,8 @@ jobs:
         with:
           name: lib-a-dist
           path: packages/lib-a/dist
+      - uses: actions/download-artifact@v7
+        with:
+          name: lib-b-dist
+          path: packages/lib-b/dist
       - run: pnpm --filter @gh-actions/app-b test
