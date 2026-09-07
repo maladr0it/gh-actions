@@ -69,6 +69,32 @@ jobs:
           path: packages/lib-a/dist
       - run: pnpm --filter @gh-actions/app-a test
 
+  test-app-a-visual:
+    name: Test app-a visual
+    needs: [build-lib-a]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v7
+        with:
+          name: lib-a-dist
+          path: packages/lib-a/dist
+      - run: pnpm --filter @gh-actions/app-a exec playwright install --with-deps chromium
+      - run: pnpm --filter @gh-actions/app-a test:visual
+      - name: Upload visual report
+        id: visual-report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: app-a-visual-report
+          path: packages/app-a/.vitest
+          include-hidden-files: true
+          if-no-files-found: ignore
+      - name: Visual report link
+        if: failure() && steps.visual-report.outputs.artifact-url
+        run: echo "[Open visual report](https://viewer.vitest.dev/?url=${{ steps.visual-report.outputs.artifact-url }})" >> "$GITHUB_STEP_SUMMARY"
+
   test-app-b:
     name: Test app-b
     needs: [build-lib-b]
