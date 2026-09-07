@@ -6,7 +6,17 @@ on:
   pull_request:
 
 jobs:
+  hello:
+    name: Hello
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo hello world
+          exit 0
+
   ci:
+    name: CI
+    needs: hello
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
