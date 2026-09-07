@@ -1,0 +1,72 @@
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@npm//packages/lib-b:vitest/package_json.bzl", vitest = "bin")
+load("//tools/js:version.bzl", "package_version")
+
+npm_link_all_packages(name = "node_modules")
+
+exports_files(
+    ["package.json"],
+    visibility = ["//visibility:public"],
+)
+
+package_version(name = "version")
+
+ts_config(
+    name = "tsconfig_build",
+    src = "tsconfig.build.json",
+    deps = ["//:tsconfig_base"],
+)
+
+_LIB_SRCS = glob(
+    ["src/**/*.ts"],
+    exclude = [
+        "src/**/*.test.ts",
+        "src/**/*.generated.ts",
+    ],
+)
+
+ts_project(
+    name = "lib",
+    srcs = _LIB_SRCS + [":version"],
+    composite = True,
+    declaration = True,
+    declaration_map = True,
+    out_dir = "dist",
+    root_dir = "src",
+    source_map = True,
+    tsconfig = ":tsconfig_build",
+    validate = False,
+    deps = [
+        ":node_modules/@gh-actions/lib-a",
+    ],
+)
+
+npm_package(
+    name = "pkg",
+    srcs = [
+        "package.json",
+        ":lib",
+    ],
+    include_npm_sources = True,
+    include_runfiles = True,
+    visibility = ["//visibility:public"],
+)
+
+vitest.vitest_test(
+    name = "test",
+    size = "small",
+    args = [
+        "run",
+        "--config=vitest.config.ts",
+        "--cache=false",
+    ],
+    chdir = package_name(),
+    data = _LIB_SRCS + [
+        "package.json",
+        "vitest.config.ts",
+        ":node_modules",
+        ":version",
+    ] + glob(["src/**/*.test.ts"]),
+)

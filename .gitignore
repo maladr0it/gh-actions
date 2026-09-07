@@ -1,6 +1,8 @@
 node_modules
 .pnpm-store
 dist
+/bazel-*
+user.bazelrc
 dist-ssr
 *.generated*
 *.local

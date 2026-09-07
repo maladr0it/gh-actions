@@ -1,0 +1,20 @@
+# Pin behavior so developer machines and CI analyze the same graph.
+common --enable_bzlmod
+common --incompatible_strict_action_env
+common --lockfile_mode=update
+
+# Failures should name the action, not dump a wall of green.
+build --verbose_failures
+test --test_output=errors
+test --test_summary=detailed
+test --build_tests_only
+
+# Compile with tsc (matches pnpm). skipLibCheck is the usual monorepo speed trade.
+common --@aspect_rules_ts//ts:skipLibCheck=always
+common --@aspect_rules_ts//ts:default_to_tsc_transpiler
+
+# CI freezes MODULE.bazel.lock so BCR fetches cannot drift.
+common:ci --lockfile_mode=error
+
+# Per-developer flags (disk cache, --config=debug). Not committed.
+try-import %workspace%/user.bazelrc
