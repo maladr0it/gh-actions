@@ -1,0 +1,28 @@
+{
+  "name": "@gh-actions/lib-b",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "generate": "node scripts/embed-version.ts",
+    "build": "pnpm generate && tsc -b tsconfig.build.json",
+    "test": "pnpm generate && vitest run",
+    "typecheck": "pnpm generate && tsc -b"
+  },
+  "dependencies": {
+    "@gh-actions/lib-a": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

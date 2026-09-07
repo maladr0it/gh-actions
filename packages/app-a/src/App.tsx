@@ -10,11 +10,11 @@ export function App() {
     <main>
       <p className="eyebrow">app-a · @gh-actions/lib-a</p>
       <h1>
-        v<span data-testid="lib-version">{version}</span>
+        v<span data-testid="lib-a-version">{version}</span>
       </h1>
       <p className="lede">
-        Vite + React app A consuming the workspace library. The version above
-        comes from <code>@gh-actions/lib-a</code>.
+        Vite + React app A consuming <code>@gh-actions/lib-a</code>. The version
+        above comes from that package.
       </p>
     </main>
   );
