@@ -8,3 +8,5 @@ dist-ssr
 coverage
 *.tsbuildinfo
 .vite
+/bazel-*
+user.bazelrc

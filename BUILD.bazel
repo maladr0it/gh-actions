@@ -1,0 +1,9 @@
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+
+# One target so `bazel test //...` has something to run.
+# Next steps will add packages/lib-a, then lib-b, then the apps.
+sh_test(
+    name = "smoke",
+    size = "small",
+    srcs = ["smoke_test.sh"],
+)

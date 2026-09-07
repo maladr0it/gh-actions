@@ -29,6 +29,16 @@ pnpm exec prettier --write .
 
 `pnpm -r <script>` still runs that script in every package that defines it.
 
+## Bazel (step 1)
+
+GitHub Actions still runs CI. There is a second workflow, [`.github/workflows/bazel.yml`](.github/workflows/bazel.yml), with **one** job that installs Bazel and runs `bazel test //:smoke`. That is a shell script, not the TypeScript workspace. pnpm jobs are unchanged.
+
+Needs [Bazelisk](https://github.com/bazelbuild/bazelisk) (`brew install bazelisk`). Version pin: `.bazelversion`.
+
+```sh
+bazel test //:smoke
+```
+
 ## GitHub Actions
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push to `main` and on pull requests. Each job checks out the repo, then [`pnpm/setup`](https://github.com/pnpm/setup) installs pnpm (from `packageManager`), Node 26, and the workspace.

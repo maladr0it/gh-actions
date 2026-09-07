@@ -1,0 +1,8 @@
+"""Step 1: a Bazel module. No JS rules yet."""
+
+module(
+    name = "gh_actions",
+    version = "0.1.0",
+)
+
+bazel_dep(name = "rules_shell", version = "0.8.0")

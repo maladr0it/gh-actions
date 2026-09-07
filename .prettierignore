@@ -5,3 +5,7 @@ coverage
 pnpm-lock.yaml
 *.tsbuildinfo
 .vite
+MODULE.bazel.lock
+*.bazel
+.bazelrc
+.bazelversion

@@ -1,0 +1,2 @@
+# Keep developer and CI flags the same.
+test --test_output=streamed
