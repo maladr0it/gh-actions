@@ -22,6 +22,7 @@ pnpm --filter @gh-actions/lib-a test
 pnpm --filter @gh-actions/lib-b test
 pnpm --filter @gh-actions/app-a test
 pnpm --filter @gh-actions/app-a test:visual
+pnpm --filter @gh-actions/app-a test:visual:new
 pnpm --filter @gh-actions/app-b test
 pnpm --filter @gh-actions/app-a dev
 pnpm --filter @gh-actions/app-b dev
@@ -49,6 +50,8 @@ Test lib-a      (no needs — parallel with Build lib-a)
 5. **Test app-a** — wait only on **Build lib-a**, download that `dist`
 6. **Test app-a visual** — same `dist`, install Chromium, run browser tests. Compares screenshots on Linux only. Does not rewrite baselines.
 7. **Test app-b** — wait on **Build lib-b**, download both `dist` folders (`lib-b` imports `lib-a` at runtime)
+
+`test:visual:new` writes missing Linux baselines and still fails on pixel mismatches. The run also fails once after creating a new file so you can review it before committing. `--update` is only for replacing shots that already exist.
 
 lib-a / lib-b tests and app tests are siblings where the graph allows. A failing `printVersion` test on lib-a does not skip the apps; a missing `dist` does.
 

@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run --project unit",
     "test:visual": "vitest run --project vrt",
+    "test:visual:new": "vitest run --project vrt --update=new",
     "test:visual:open": "vitest --project vrt --browser.headless=false --test-timeout=0",
     "test:visual:debug": "vitest --project vrt --browser.headless=false --inspect-brk --no-file-parallelism --test-timeout=0",
     "typecheck": "tsc -b --noEmit"
